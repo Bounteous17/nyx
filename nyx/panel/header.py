@@ -232,6 +232,7 @@ class Sampling(object):
 
     or_listeners = controller.get_listeners(stem.control.Listener.OR, [])
     control_listeners = controller.get_listeners(stem.control.Listener.CONTROL, [])
+    dns_listeners = controller.get_listeners(stem.control.Listener.DNS, [])
     my_router_status_entry = nyx.tracker.get_consensus_tracker().my_router_status_entry()
 
     if controller.get_conf('HashedControlPassword', None):
@@ -272,6 +273,7 @@ class Sampling(object):
       'or_port': or_listeners[0][1] if or_listeners else '',
       'dir_port': controller.get_conf('DirPort', '0'),
       'control_port': str(control_listeners[0][1]) if control_listeners else None,
+      'dns_listeners': str(dns_listeners[0][1]) if dns_listeners else None,
       'socket_path': controller.get_conf('ControlSocket', None),
       'is_relay': bool(or_listeners),
 
@@ -346,6 +348,9 @@ def _draw_ports_section(subwindow, x, y, width, vals):
 
     if vals.dir_port != '0':
       x = subwindow.addstr(x, y, vals.format(', Dir Port: {dir_port}'))
+
+    if vals.dns_listeners != '0':
+      x = subwindow.addstr(x, y, vals.format(', DNS Port: {dns_listeners}'))
 
   if vals.control_port:
     if width >= x + 19 + len(vals.control_port) + len(vals.auth_type):
